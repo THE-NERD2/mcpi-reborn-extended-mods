@@ -3,7 +3,6 @@
 #include "redstone_torch.hpp"
 #include "repeater.hpp"
 #include "pistons.hpp"
-#include "ruby.hpp"
 
 static void Tile_initTiles_injection(unsigned char* p0) {
     make_redstone_dust_tile();
@@ -18,7 +17,6 @@ static void Item_initItems_injection(unsigned char* p0) {
     make_redstone_repeater_item();
     make_piston_item();
     make_spiston_item();
-    make_ruby_item();
 }
 static void Inventory_setupDefault_FillingContainer_addItem_call_injection(unsigned char* fc) {
 	ItemInstance* ruby = new ItemInstance;
