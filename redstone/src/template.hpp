@@ -37,6 +37,11 @@ static unsigned int Tile_updateShape_vtable_offset = 0x14;
 typedef unsigned char* (*Tile_getDescriptionId_t)(unsigned char*, int); // unsigned char* tile, int <name>
 static unsigned int Tile_getDescriptionId_vtable_offset = 0xdc;
 
+typedef AABB* (*Tile_getAABB_t)(unsigned char*, unsigned char*, int, int, int);
+static unsigned int Tile_getAABB_vtable_offset = 0x34;
+
+static unsigned int Tile_AABB_property_offset = 0x40;
+
 typedef int (*Level_getData_t)(unsigned char*, int, int, int); // unsigned char* tile, int x, int y, int z
 static Level_getData_t Level_getData = (Level_getData_t) 0xa3324;
 

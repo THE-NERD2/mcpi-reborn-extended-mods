@@ -206,6 +206,16 @@ static unsigned char* piston_getDescriptionId(unsigned char* tile, int param_1) 
 	unsigned char* ucdi = (unsigned char*) cdi;
 	return ucdi;
 }
+static AABB* piston_getAABB(unsigned char* tile, unsigned char* level, int x, int y, int z) {
+	AABB* aabb = (AABB*) (tile + Tile_AABB_property_offset);
+	aabb->x1 = x;
+	aabb->y1 = y;
+	aabb->z1 = z;
+	aabb->x2 = x + 1;
+	aabb->y2 = y + 1;
+	aabb->z2 = z + 1;
+	return aabb;
+}
 static void piston_useOn(unsigned char* level, int x, int y, int z, int side, unsigned char* player) {
 	vector<int> point = processHit(x, y, z, side);
 	float pitch = *(float*) (player + Entity_pitch_property_offset); // y= is 0, downward
@@ -256,6 +266,7 @@ static void setPistonProperties(unsigned char* tile, unsigned char* vtable) {
 	*(Tile_updateDefaultShape_t*) (vtable + Tile_updateDefaultShape_vtable_offset) = &piston_updateDefaultShape;
 	*(Tile_updateShape_t*) (vtable + Tile_updateShape_vtable_offset) = &piston_updateShape;
 	*(Tile_getDescriptionId_t*) (vtable + Tile_getDescriptionId_vtable_offset) = &piston_getDescriptionId;
+	*(Tile_getAABB_t*) (vtable + Tile_getAABB_vtable_offset) = &piston_getAABB;
 	Tile_setDestroyTime_t piston_setDestroyTime = *(Tile_setDestroyTime_t*) (vtable + Tile_setDestroyTime_vtable_offset);
 	Tile_setExplodeable_t piston_setExplodeable = *(Tile_setExplodeable_t*) (vtable + Tile_setExplodeable_vtable_offset);
 	Tile_setSoundType_t piston_setSoundType = *(Tile_setSoundType_t*) (vtable + Tile_setSoundType_vtable_offset);

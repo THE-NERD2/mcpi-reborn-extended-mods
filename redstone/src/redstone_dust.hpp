@@ -97,6 +97,16 @@ static unsigned char* redstone_getDescriptionId(unsigned char* tile, int param_1
 	unsigned char* ucdi = (unsigned char*) cdi;
 	return ucdi;
 }
+static AABB* redstone_getAABB(unsigned char* tile, unsigned char* level, int x, int y, int z) {
+	AABB* aabb = (AABB*) (tile + Tile_AABB_property_offset);
+	aabb->x1 = x;
+	aabb->y1 = y;
+	aabb->z1 = z;
+	aabb->x2 = x + 1;
+	aabb->y2 = y;
+	aabb->z2 = z + 1;
+	return aabb;
+}
 static void redstone_useOn(unsigned char* level, int x, int y, int z, int side) {
 	vector<int> point = processHit(x, y, z, side);
 	Level_setTileAndData_addToEnigma(level, point[0], point[1], point[2], 407, 0);
@@ -115,6 +125,7 @@ static void make_redstone_dust_tile() {
 	*(Tile_updateDefaultShape_t*) (rvtable + Tile_updateDefaultShape_vtable_offset) = &redstone_updateDefaultShape;
 	*(Tile_updateShape_t*) (rvtable + Tile_updateShape_vtable_offset) = &redstone_updateShape;
 	*(Tile_getDescriptionId_t*) (rvtable + Tile_getDescriptionId_vtable_offset) = &redstone_getDescriptionId;
+	*(Tile_getAABB_t*) (rvtable + Tile_getAABB_vtable_offset) = &redstone_getAABB;
 	Tile_setDestroyTime_t redstone_setDestroyTime = *(Tile_setDestroyTime_t*) (rvtable + Tile_setDestroyTime_vtable_offset);
 	Tile_setExplodeable_t redstone_setExplodeable = *(Tile_setExplodeable_t*) (rvtable + Tile_setExplodeable_vtable_offset);
 	Tile_setSoundType_t redstone_setSoundType = *(Tile_setSoundType_t*) (rvtable + Tile_setSoundType_vtable_offset);

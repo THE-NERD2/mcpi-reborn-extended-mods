@@ -65,6 +65,16 @@ static unsigned char* repeater_getDescriptionId(unsigned char* tile, int param_1
 	unsigned char* uid = (unsigned char*) cid;
 	return uid;
 }
+static AABB* repeater_getAABB(unsigned char* tile, unsigned char* level, int x, int y, int z) {
+	AABB* aabb = (AABB*) (tile + Tile_AABB_property_offset);
+	aabb->x1 = x;
+	aabb->y1 = y;
+	aabb->z1 = z;
+	aabb->x2 = x + 1;
+	aabb->y2 = y + 0.0625;
+	aabb->z2 = z + 1;
+	return aabb;
+}
 static void repeater_useOn(unsigned char* level, int x, int y, int z, int side, unsigned char* player) {
 	vector<int> point = processHit(x, y, z, side);
 	float rawYaw = *(float*) (player + Entity_yaw_property_offset);
@@ -87,6 +97,7 @@ static void setRepeaterProperties(unsigned char* tile, unsigned char* vtable) {
 	*(Tile_updateDefaultShape_t*) (vtable + Tile_updateDefaultShape_vtable_offset) = &repeater_updateDefaultShape;
 	*(Tile_updateShape_t*) (vtable + Tile_updateShape_vtable_offset) = &repeater_updateShape;
 	*(Tile_getDescriptionId_t*) (vtable + Tile_getDescriptionId_vtable_offset) = &repeater_getDescriptionId;
+	*(Tile_getAABB_t*) (vtable + Tile_getAABB_vtable_offset) = &repeater_getAABB;
 	Tile_setDestroyTime_t repeater_setDestroyTime = *(Tile_setDestroyTime_t*) (vtable + Tile_setDestroyTime_vtable_offset);
 	Tile_setExplodeable_t repeater_setExplodeable = *(Tile_setExplodeable_t*) (vtable + Tile_setExplodeable_vtable_offset);
 	Tile_setSoundType_t repeater_setSoundType = *(Tile_setSoundType_t*) (vtable + Tile_setSoundType_vtable_offset);

@@ -7,7 +7,7 @@ extern void Level_setTileAndData_addToEnigma(unsigned char*, int, int, int, int,
 static void recallMachines() {
 	while(!inGame && !mrStop) {}
 	if(inGame) {
-		fprintf(stderr, "Loading machines...\n");
+		fprintf(stderr, "Loading machines...\nin immediate area...");
 		unsigned char* player = *(unsigned char**) (mc + Minecraft_player_property_offset);
 		unsigned char* level = *(unsigned char**) (mc + Minecraft_level_property_offset);
 		int px = round(*(float*) (player + Entity_x_property_offset));
@@ -35,6 +35,7 @@ static void recallMachines() {
 				}
 			}
 		}
+		fprintf(stderr, "done\nin world...");
 		for(int x = 0; x <= 256 && !mrStop; x++) {
 			for(int y = 0; y <= 128 && !mrStop; y++) {
 				for(int z = 0; z <= 256 && !mrStop; z++) {
@@ -57,5 +58,6 @@ static void recallMachines() {
 				}
 			}
 		}
+		fprintf(stderr, "done.\n");
 	}
 }
