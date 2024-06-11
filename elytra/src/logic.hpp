@@ -62,9 +62,9 @@ static void update(unsigned char* minecraft) {
         dy = lookY;
         dz = lookZ;
         int newT = clock();
-        px += dx * (float) (newT - t) / 1000000.0;
-        px += dy * (float) (newT - t) / 1000000.0;
-        px += dz * (float) (newT - t) / 1000000.0;
+        px += dx * (newT - t) / 1000000;
+        px += dy * (newT - t) / 1000000;
+        px += dz * (newT - t) / 1000000;
         Entity_move_t player_move = *(Entity_move_t*) (*(unsigned char**) player + Entity_move_vtable_offset);
         (*player_move)(player, dx, dy, dz);
         t = newT;
