@@ -26,7 +26,7 @@ HOOK(SDL_PollEvent, int, (SDL_Event* event)) {
                 int x = round(*(float*) (player + Entity_x_property_offset));
                 int y = floor(*(float*) (player + Entity_y_property_offset));
                 int z = round(*(float*) (player + Entity_z_property_offset));
-                if((*Level_getTile)(level, x, y - 3, z) == 0) {
+                if((*Level_getTile)(level, x, y - 3, z) == 0 || flying) {
                     flying = !flying;
                     if(flying) {
                         t = clock();
@@ -44,9 +44,9 @@ static void update(unsigned char* minecraft) {
     if(flying && player != NULL) {
         float pitch = *(float*) (player + Entity_pitch_property_offset);
         float yaw = *(float*) (player + Entity_yaw_property_offset);
-        float lookX = -sind(yaw);
+        float lookX = -sind(yaw) * cosd(pitch);
         float lookY = -sind(pitch);
-        float lookZ = cosd(yaw);
+        float lookZ = cosd(yaw) * cosd(pitch);
         float l = sqrt(lookX * lookX + lookY * lookY + lookZ * lookZ);
         lookX /= l;
         lookY /= l;
