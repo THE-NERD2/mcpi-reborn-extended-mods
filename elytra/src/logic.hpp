@@ -62,16 +62,11 @@ static void update(unsigned char* minecraft) {
         dy = lookY;
         dz = lookZ;
         int newT = clock();
-        float newX = px + dx * (float) (newT - t) / 1000000.0;
-        float newY = py + dy * (float) (newT - t) / 1000000.0;
-        float newZ = pz + dz * (float) (newT - t) / 1000000.0;
-        if((*Level_getTile)(level, round(newX), round(newY), round(newZ)) == 0 && (*Level_getTile)(level, round(newX), round(newY) - 1, round(newZ)) == 0) {
-            px = newX;
-            py = newY;
-            pz = newZ;
-            Entity_move_t player_move = *(Entity_move_t*) (*(unsigned char**) player + Entity_move_vtable_offset);
-            (*player_move)(player, dx, dy, dz);
-        }
+        px += dx * (float) (newT - t) / 1000000.0;
+        px += dy * (float) (newT - t) / 1000000.0;
+        px += dz * (float) (newT - t) / 1000000.0;
+        Entity_move_t player_move = *(Entity_move_t*) (*(unsigned char**) player + Entity_move_vtable_offset);
+        (*player_move)(player, dx, dy, dz);
         t = newT;
     }
 }
