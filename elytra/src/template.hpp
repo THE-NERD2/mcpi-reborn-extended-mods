@@ -20,6 +20,8 @@ static Player_getArmor_t Player_getArmor = (Player_getArmor_t) 0x8fda4;
 typedef void (*Entity_move_t)(unsigned char*, float, float, float);
 static unsigned int Entity_move_vtable_offset = 0x18;
 
+static unsigned int Player_jump_property_offset = 0x38;
+
 unsigned char** Material_iron = (unsigned char**) 0x17a7a8;
 
 static float sind(float deg) {

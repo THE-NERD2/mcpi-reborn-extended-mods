@@ -4,14 +4,11 @@ static bool flying = false;
 static unsigned char* player = NULL;
 static unsigned char* level = NULL;
 static float t = clock();
-static float px = 0.0f;
-static float py = 0.0f;
-static float pz = 0.0f;
 static float dx = 0.0f;
 static float dy = 0.0f;
 static float dz = 0.0f;
 
-static float speed = 1.0f;
+static float speed = 20.0f;
 
 HOOK(SDL_PollEvent, int, (SDL_Event* event)) {
     ensure_SDL_PollEvent();
@@ -33,11 +30,7 @@ HOOK(SDL_PollEvent, int, (SDL_Event* event)) {
                     flying = !flying;
                     if(flying) {
                         t = clock();
-                        px = *(float*) (player + Entity_x_property_offset);
-                        py = *(float*) (player + Entity_y_property_offset);
-                        pz = *(float*) (player + Entity_z_property_offset);
                     }
-                    fprintf(stderr, "Toggled flying\n");
                 }
             }
         }
@@ -58,13 +51,14 @@ static void update(unsigned char* minecraft) {
         lookX /= l;
         lookY /= l;
         lookZ /= l;
-        dx = lookX;
-        dy = lookY;
-        dz = lookZ;
+        dx = lookX * speed;
+        dy = lookY * speed;
+        dz = lookZ * speed;
         int newT = clock();
-        px += dx * (newT - t) / 1000000;
-        px += dy * (newT - t) / 1000000;
-        px += dz * (newT - t) / 1000000;
+        dx *= (newT - t) / 1000000;
+        dy *= (newT - t) / 1000000;
+        dz *= (newT - t) / 1000000;
+        *(float*) (player + Player_jump_property_offset) = 0.0f;
         Entity_move_t player_move = *(Entity_move_t*) (*(unsigned char**) player + Entity_move_vtable_offset);
         (*player_move)(player, dx, dy, dz);
         t = newT;
