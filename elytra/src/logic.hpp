@@ -4,6 +4,7 @@ static bool flying = false;
 static unsigned char* player = NULL;
 static unsigned char* level = NULL;
 
+static float lastYaw = 0.0f;
 static float t = clock();
 static float dx = 0.0f;
 static float dy = 0.0f;
@@ -16,8 +17,8 @@ static const float old_velocity_decay = 0.8f;
 static const float drag = 0.0f;
 static const float fall_speed = 0.5f;
 static const float pitch_accel = 4.0f;
-static const float terminal_velocity = 6.0f;
-//static const float turn_accel = WIP;
+static const float terminal_velocity = 7.0f;
+static const float turn_decay = 0.3f;
 static const float rocket_boost = 4.0f;
 
 HOOK(SDL_PollEvent, int, (SDL_Event* event)) {
@@ -38,6 +39,7 @@ HOOK(SDL_PollEvent, int, (SDL_Event* event)) {
                     if((*Level_getTile)(level, x, y - 3, z) == 0 || flying) {
                         flying = !flying;
                         if(flying) {
+                            lastYaw = 0.0f;
                             t = clock();
                             speed = 0.0f;
                             dx = 0.0f;
@@ -79,8 +81,11 @@ static void update(unsigned char* minecraft) {
 
         float ds = 0;
         ds -= drag * speed;
-        ds += -(lookY + 0.1) * pitch_accel;
+        ds += -lookY * pitch_accel;
         speed += ds * dt;
+        fprintf(stderr, "%f\n", speed);
+        speed *= pow(turn_decay, abs(yaw - lastYaw) / 180);
+        fprintf(stderr, "%f\n", speed);
         if(speed < 0) {
             speed = 0;
         } else if(speed > terminal_velocity) {
@@ -116,5 +121,6 @@ static void update(unsigned char* minecraft) {
         }
 
         t = newT;
+        lastYaw = yaw;
     }
 }
